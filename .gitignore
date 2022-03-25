@@ -51,3 +51,6 @@ target/**
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+# Resources files
+resources/**

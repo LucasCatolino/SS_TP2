@@ -2,10 +2,6 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.swing.CellEditor;
-
-import org.junit.jupiter.api.AfterEach;
-
 import core.Cell;
 
 class Test {

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Writer {
 	
-	private static final int INIT_QUANT= 75;
+	private static final int INIT_QUANT= 65;
 	private static final int RANGE= 5;
 		
     public Writer(int L, int dim, String type) {
@@ -32,7 +32,8 @@ public class Writer {
 
 	private void randomizePositions(int l, int dim, FileWriter myWriter) throws IOException {
 		int middle= (int) Math.floor(l/2);
-		for (int i = 0; i < INIT_QUANT; i++) {
+		int max= (dim == 2) ? INIT_QUANT : INIT_QUANT * 10;
+		for (int i = 0; i < max; i++) {
 			int x= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int y= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int z= (dim == 2) ? 0 :  (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);

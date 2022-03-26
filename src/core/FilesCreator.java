@@ -27,12 +27,22 @@ public class FilesCreator {
 		String auxDim = readerDim.readLine();
 		
 		int dim= (auxDim.contains("3")) ? 3 : 2;
+		
+    	boolean correctMax= false;
+    	int max= 0;
+    	while (!correctMax) {    		
+    		System.out.println("Insert starting percentage of alive cells (1 to 100)");
+    		BufferedReader readerL = new BufferedReader(new InputStreamReader(System.in));
+    		String auxMax = readerL.readLine();
+    		max= Integer.valueOf(auxMax);
+    		correctMax= (max > 0 && max < 101) ? true : false;
+    	}
 
 
-    	System.out.println("L: " + L + " dimension: " + dim + "D");
+    	System.out.println("L: " + L + " dimension: " + dim + "D" + " starting: %" + max);
     	
-    	Writer writerStatic = new Writer(L, dim, "static");
-		Writer writerDynamic = new Writer(L, dim, "dynamic");
+    	Writer writerStatic = new Writer(L, dim, max, "static");
+		Writer writerDynamic = new Writer(L, dim, max, "dynamic");
 
     }
 

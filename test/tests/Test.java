@@ -1,11 +1,7 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import core.Cell;
-
 class Test {
-
+/*
 	@org.junit.jupiter.api.Test
 	void test01CreacionDeCelda() {
 		Cell cell= new Cell(false, 5);
@@ -34,5 +30,5 @@ class Test {
 	}
 	
 	
-
+*/
 }

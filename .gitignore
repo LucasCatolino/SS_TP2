@@ -54,3 +54,4 @@ target/**
 
 # Resources files
 resources/**
+/out/

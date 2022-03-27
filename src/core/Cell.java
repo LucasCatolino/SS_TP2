@@ -1,29 +1,34 @@
 package core;
 
 public class Cell{
-    private final Point pnt;
-    private final Node node;
     private final int distance;
+    private boolean alive;
 
 
-    public Cell(Node node, Point pnt, int distance) {
-        this.node= node;
-        this.pnt = pnt;
+    public Cell(Boolean alive, int distance) {
+        this.alive = alive;
         this.distance = distance;
     }
 
-    public Point getPnt() {
-        return pnt;
-    }
+
+
     public boolean isAlive() {
-        return node.isAlive();
+        return alive;
+    }
+
+    public void revive() {
+        alive= true;
+    }
+    public void kill() {
+        alive= false;
+    }
+
+    public void ChangeStatus(){
+        alive = !alive;
     }
 
     public int getDistance() {
         return distance;
     }
 
-    public Node getNode() {
-        return node;
-    }
 }

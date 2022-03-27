@@ -7,7 +7,12 @@ import java.util.List;
 
 public class Space implements Iterator<Cell>{
     private static final int  centerX = 50, centerY = 50, centerZ = 50;
-    private final Node[][][] space;
+
+    public Cell[][][] getSpace() {
+        return space;
+    }
+
+    private final Cell[][][] space;
     private final int size;
     private final boolean treeD; //3D
     private final Point3D center;
@@ -16,20 +21,50 @@ public class Space implements Iterator<Cell>{
         this.treeD = treeD;
         this.size = size;
         if (treeD){
-            space = new Node[size][size][size];
+            center = new Point3D(centerX, centerY ,centerZ);
+            space = new Cell[size][size][size];
+            for(int i=0; i<size; i++){
+                for(int j=0; j<size; j++){
+                    for(int k=0; k<size; k++){
+                        space[i][j][k] = new Cell(false, (int) getDistOrigin(i,j,k));
+                    }
+                }
+            }
         }else{
-            space = new Node[size][size][0];
+            center = new Point3D(centerX, centerY ,0);
+            space = new Cell[size][size][1];
+            for(int i=0; i<size; i++){
+                for(int j=0; j<size; j++){
+                        space[i][j][0] = new Cell(false, (int) getDistOrigin(i,j,0));
+                }
+            }
         }
-        center = new Point3D(centerX, centerY ,centerZ);
-        //TODO: creamos todo los nodos y los dejamos muertos
     }
 
     public void add(int x, int y, int z){
         space[x][y][z].revive();
     }
 
-    public void update(List<Cell> liveCell) {
-        //TODO:hacer
+    public Space update() {
+        Space toRet = new Space(size,treeD);
+        Cell[][][] new_space = toRet.getSpace();
+        for(int i=0; i<size; i++){
+            for(int j=0; j<size;j++){
+                if(treeD) {
+                    for (int k = 0; k < size; k++) {
+                        if (getNumLiveNeighborsCell(i, j, k) < 5) { //TODO: acá poner el predicadoo!!!!!
+                            new_space[i][j][k].revive();
+                        }
+                    }
+                }
+                else{
+                    if(getNumLiveNeighborsCell(i,j,0) < 5){ //TODO: acá poner el predicadoo!!!!!
+                        new_space[i][j][0].revive();
+                    }
+                }
+            }
+        }
+        return toRet;
         //primero matamos todos
         //itera sobre la lista reviveindo las celdas que estan en la lista
     }
@@ -83,14 +118,27 @@ public class Space implements Iterator<Cell>{
             }
             if(z > 0){
                 toRet += space[x][y-1][z-1].isAlive() ? 1:0;    // x y-1 z-1
+                if( x < size-1){
+                    toRet += space[x+1][y-1][z-1].isAlive() ? 1:0; // x+1 y-1 z-1
+                }
+                if(x > 0){
+                    toRet += space[x-1][y-1][z-1].isAlive() ? 1:0; //x-1 y-1 z-1
+                }
             }
             if(z < size-1 && treeD){
                 toRet += space[x][y-1][z+1].isAlive() ? 1:0;   // x y-1 z+1
+                if( x < size-1){
+                    toRet += space[x+1][y-1][z+1].isAlive() ? 1:0; // x+1 y-1 z+1
+                }
+                if(x > 0){
+                    toRet += space[x-1][y-1][z+1].isAlive() ? 1:0; //x-1 y-1 z+1
+                }
             }
         }
 
         if(z>0){
             toRet += space[x][y][z-1].isAlive() ? 1:0; // x y z-1
+
             if(y < size-1){
                 toRet += space[x][y+1][z-1].isAlive() ? 1:0; // x y+1 z-1
             }
@@ -102,13 +150,19 @@ public class Space implements Iterator<Cell>{
             }
 
         }
-        //TODO:hacer
-        return 0;
+        if(z < size-1 && treeD){
+            toRet += space[x][y][z+1].isAlive() ? 1:0;  // x y z+1
+        }
+        if(x < size-1){
+            toRet += space[x+1][y][z].isAlive() ? 1:0; // x+1 y z
+        }
+        if(y < size-1){
+            toRet += space[x][y+1][z].isAlive() ? 1:0; // x y+1 z
+        }
+        return toRet;
     }
 
     private double getDistOrigin(int x, int y, int z){
-        //TODO:hacer
-        //dada una posicion devulve la posicion al origen
         return center.distance( x, y, z);
     }
 

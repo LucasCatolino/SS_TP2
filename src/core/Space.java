@@ -11,7 +11,7 @@ public class Space implements Iterator<Cell>{
     public Cell[][][] getSpace() {
         return space;
     }
-
+    public int cellAmmo;
     private final Cell[][][] space;
     private final int size;
     private final boolean treeD; //3D
@@ -20,6 +20,7 @@ public class Space implements Iterator<Cell>{
     public Space(int size, boolean treeD ) {
         this.treeD = treeD;
         this.size = size;
+        cellAmmo = 0;
         if (treeD){
             center = new Point3D(centerX, centerY ,centerZ);
             space = new Cell[size][size][size];
@@ -45,22 +46,18 @@ public class Space implements Iterator<Cell>{
         space[x][y][z].revive();
     }
 
-    public Space update() {
+    public Space update(Rules rules) {
         Space toRet = new Space(size,treeD);
         Cell[][][] new_space = toRet.getSpace();
         for(int i=0; i<size; i++){
             for(int j=0; j<size;j++){
                 if(treeD) {
                     for (int k = 0; k < size; k++) {
-                        if (getNumLiveNeighborsCell(i, j, k) < 5) { //TODO: acá poner el predicadoo!!!!!
-                            new_space[i][j][k].revive();
-                        }
+                        toRet.cellAmmo += rules.apply(new_space[i][j][k],space[i][j][k].isAlive(),getNeighbors(i,j,k));
                     }
                 }
                 else{
-                    if(getNumLiveNeighborsCell(i,j,0) < 5){ //TODO: acá poner el predicadoo!!!!!
-                        new_space[i][j][0].revive();
-                    }
+                    toRet.cellAmmo += rules.apply(new_space[i][j][0], space[i][j][0].isAlive(), getNeighbors(i,j,0));
                 }
             }
         }
@@ -69,95 +66,22 @@ public class Space implements Iterator<Cell>{
         //itera sobre la lista reviveindo las celdas que estan en la lista
     }
 
-
-    public int getNumLiveNeighborsCell(int x,int y,  int z){
-        int toRet = 0;
-
-
-
-        if(x>0){ //creo que faltan
-            toRet += space[x-1][y][z].isAlive() ? 1:0;           // x-1 y z
-            if(y>0){
-                toRet += space[x-1][y-1][z].isAlive() ? 1:0;     // x-1 y-1 z
-                if(z >0){
-                    toRet += space[x-1][y-1][z-1].isAlive() ? 1:0;  // x-1 y-1 z-1
-                }
-                if(z < size-1 && treeD){
-                    toRet += space[x-1][y-1][z+1].isAlive() ? 1:0;   // x-1 y-1 z+1
-                }
-            }
-            if(y < size-1){
-                toRet += space[x-1][y+1][z].isAlive() ? 1:0;    // x-1 y+1 z
-                if(z >0){
-                    toRet += space[x-1][y+1][z-1].isAlive() ? 1:0;  // x-1 y+1 z-1
-                }
-                if(z < size-1 && treeD){
-                    toRet += space[x-1][y+1][z+1].isAlive() ? 1:0;   // x-1 y+1 z+1
+    public int getNeighbors(int x, int y, int z) {
+        int toRet = space[x][y][z].isAlive() ? -1 : 0;
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (treeD) {
+                    for (int k = -1; k < 2; k++) {
+                        if (x + i > 0 && x + i < size - 1 && y + j > 0 && y + j < size - 1 && z + k > 0 && (z + k < size - 1)) { //checkea que no este contando celdas que no existen
+                            toRet += space[x + i][y + j][z + k].isAlive() ? 1 : 0;
+                        }
+                    }
+                } else {
+                    if (x + i > 0 && x + i < size - 1 && y + j > 0 && y + j < size - 1) { // lo mismo que el if de arriba pero en 2D
+                         toRet += space[x + i][y + j][z].isAlive() ? 1 : 0;
+                    }
                 }
             }
-
-
-            if(z > 0){
-                toRet += space[x-1][y][z-1].isAlive() ? 1:0;    // x-1 y z-1
-            }
-            if(z < size-1 && treeD){
-                toRet += space[x-1][y][z+1].isAlive() ? 1:0;   // x-1 y z+1
-            }
-        }
-
-        if(y>0){
-            toRet += space[x][y-1][z].isAlive() ? 1:0;       // x y-1 z
-            if(x < size-1){
-                toRet += space[x+1][y-1][z].isAlive() ? 1:0;    // x+1 y-1 z
-                if(z > 0){
-                    toRet += space[x+1][y-1][z-1].isAlive() ? 1:0;    // x+1 y-1 z-1
-                }
-                if(z < size-1 && treeD){
-                    toRet += space[x+1][y-1][z+1].isAlive() ? 1:0;   // x+1 y-1 z+1
-                }
-            }
-            if(z > 0){
-                toRet += space[x][y-1][z-1].isAlive() ? 1:0;    // x y-1 z-1
-                if( x < size-1){
-                    toRet += space[x+1][y-1][z-1].isAlive() ? 1:0; // x+1 y-1 z-1
-                }
-                if(x > 0){
-                    toRet += space[x-1][y-1][z-1].isAlive() ? 1:0; //x-1 y-1 z-1
-                }
-            }
-            if(z < size-1 && treeD){
-                toRet += space[x][y-1][z+1].isAlive() ? 1:0;   // x y-1 z+1
-                if( x < size-1){
-                    toRet += space[x+1][y-1][z+1].isAlive() ? 1:0; // x+1 y-1 z+1
-                }
-                if(x > 0){
-                    toRet += space[x-1][y-1][z+1].isAlive() ? 1:0; //x-1 y-1 z+1
-                }
-            }
-        }
-
-        if(z>0){
-            toRet += space[x][y][z-1].isAlive() ? 1:0; // x y z-1
-
-            if(y < size-1){
-                toRet += space[x][y+1][z-1].isAlive() ? 1:0; // x y+1 z-1
-            }
-            if(x<size-1){
-                toRet += space[x+1][y][z-1].isAlive() ? 1:0; // x+1 y z-1
-                if(y < size-1){
-                    toRet += space[x+1][y+1][z-1].isAlive() ? 1:0; //x+1 y+1 z-1
-                }
-            }
-
-        }
-        if(z < size-1 && treeD){
-            toRet += space[x][y][z+1].isAlive() ? 1:0;  // x y z+1
-        }
-        if(x < size-1){
-            toRet += space[x+1][y][z].isAlive() ? 1:0; // x+1 y z
-        }
-        if(y < size-1){
-            toRet += space[x][y+1][z].isAlive() ? 1:0; // x y+1 z
         }
         return toRet;
     }

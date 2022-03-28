@@ -9,14 +9,16 @@ public class CellularAutomaton {
     private Space space;
     private static final int MAX_ITERATIONS = 50;
 
+
+
     public CellularAutomaton(String staticFile, String dynamicFile){
         //TODO:hacer
         //lee del static el size y si el 3D o no
-        space = new Space(size, true); //el de tn
+        space = new Space(size, true);
 
         //TODO:hacer
         //a mediada que lee el dynamic llena el spacio1
-        space.add(10, 1, 1);
+
     }
 
     public void solve(Rules rules){
@@ -36,7 +38,7 @@ public class CellularAutomaton {
         }*/
         int t=0;{
             while(check() && t < MAX_ITERATIONS){
-                space = space.update();
+                space = space.update(rules);
                 writeOutput(space,t);
                 t++;
             }

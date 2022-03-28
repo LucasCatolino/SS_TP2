@@ -6,21 +6,23 @@ import java.util.List;
 public class CellularAutomaton {
     private int totalCell;
     private int size = 100;
-    private Space space1,space2;
+    private Space space;
+    private static final int MAX_ITERATIONS = 50;
+
+
 
     public CellularAutomaton(String staticFile, String dynamicFile){
         //TODO:hacer
         //lee del static el size y si el 3D o no
-        space1 = new Space(size, true);
-        space2 = new Space(size, true);
+        space = new Space(size, true);
 
         //TODO:hacer
         //a mediada que lee el dynamic llena el spacio1
-        space1.add(10, 1, 1);
+
     }
 
     public void solve(Rules rules){
-        int t=0;
+      /*  int t=0;
         while (check()){
             List<Cell> liveCell = new ArrayList<>(); //donde se van guardando las celdas vivas
             while (space1.hasNext()){
@@ -33,6 +35,13 @@ public class CellularAutomaton {
             space1.update(liveCell);
             writeOutput(liveCell, t);
             t++;
+        }*/
+        int t=0;{
+            while(check() && t < MAX_ITERATIONS){
+                space = space.update(rules);
+                writeOutput(space,t);
+                t++;
+            }
         }
     }
 
@@ -41,11 +50,11 @@ public class CellularAutomaton {
         //-si no hay celdas vivas terminas
         //si hace varios ciclos no hay celldas nuevas termina
         //si una celda borde vive se termina
-        return space1.gameOver();
+        return space.gameOver();
     }
 
 
-    private void writeOutput(List<Cell> liveCell, int t){
+    private void writeOutput(Space liveCell, int t){
         //TODO:hacer
         //escrive todas las al final del archivo
     }

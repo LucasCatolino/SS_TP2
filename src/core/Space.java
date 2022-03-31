@@ -13,6 +13,15 @@ public class Space implements Iterator<Cell>{
     }
     public int cellAmmo;
     private final Cell[][][] space;
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isTreeD() {
+        return treeD;
+    }
+
     private final int size;
     private final boolean treeD; //3D
     private final Point3D center;

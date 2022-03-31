@@ -1,20 +1,35 @@
 package core;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class CellularAutomaton {
     private int totalCell;
     private int size = 100;
     private Space space;
     private static final int MAX_ITERATIONS = 50;
+    Scanner dynamicScanner;
 
 
 
     public CellularAutomaton(String staticFile, String dynamicFile){
         //TODO:hacer
+        InputStream dynamicStream = CellularAutomaton.class.getClassLoader().getResourceAsStream(dynamicFile);
+        assert dynamicStream != null;
+        InputStream staticStream = CellularAutomaton.class.getClassLoader().getResourceAsStream(staticFile);
+        assert staticStream != null;
+
+        dynamicScanner = new Scanner(dynamicStream);
+        Scanner staticScanner = new Scanner(staticStream);
+
+        size = Integer.parseInt(staticScanner.next()); //Tamaño de tablero
+        String dim = staticScanner.next(); //
+
+        boolean treeD = dim.equals("3D");
         //lee del static el size y si el 3D o no
-        space = new Space(size, true);
+        space = new Space(size, treeD);
 
         //TODO:hacer
         //a mediada que lee el dynamic llena el spacio1

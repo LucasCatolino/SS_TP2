@@ -14,6 +14,7 @@ public class CellularAutomaton {
     
     private String dynamicFile;
     private boolean treeD;
+    private double maxDist=50;
 
     public CellularAutomaton(String staticFile, String dynamicFile){
 
@@ -27,6 +28,8 @@ public class CellularAutomaton {
         Scanner staticScanner = new Scanner(staticStream);
 
         size = Integer.parseInt(staticScanner.next()); //Tam del tablero
+        maxDist= Math.sqrt(Math.pow(size/2, 2) + Math.pow(size/2, 2));
+        
         String dim = staticScanner.next(); //Dim del tablero
         staticScanner.close();
 
@@ -52,6 +55,7 @@ public class CellularAutomaton {
         	space.add(x, y, z);
         	i++;
         }
+        dynamicScanner.close();
     }
 
     public void solve(Rules rules){
@@ -98,13 +102,15 @@ public class CellularAutomaton {
     			for(int j=0; j<size; j++){
     				if(space.isTreeD()){
     					for(int k=0; k<size; k++){
-    						if(space.getSpace()[i][j][k].isAlive()) {
-    							fw.write(i + "\t" + j + "\t" + k + "\t1" + "\t0" + "\t0" + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
+    						Cell auxCell= space.getSpace()[i][j][k];
+    						if(auxCell.isAlive()) {
+    							fw.write(i + "\t" + j + "\t" + k + "\t1" + "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
     						}
     					}
     				} else {
+						Cell auxCell= space.getSpace()[i][j][0];
     					if(space.getSpace()[i][j][0].isAlive()){
-    						fw.write(i + "\t" + j + "\t0" + "\t1" + "\t0" + "\t0" + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
+    						fw.write(i + "\t" + j + "\t0" + "\t" + (1 - auxCell.getDistance()/maxDist)+ "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
     					}
     				}
     			}

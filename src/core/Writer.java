@@ -4,11 +4,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javafx.geometry.Point3D;
+
 public class Writer {
 	
 	private static final int RANGE= 5;
+    private Point3D center;
+    private double maxDist;
 		
     public Writer(int L, int dim, int max, String type) {
+    	
+        int centerXY= L/2;
+        int centerZ= (dim == 3) ? (L/2) : 0;
+        center = new Point3D(centerXY, centerXY ,centerZ);
+        maxDist= Math.sqrt(Math.pow(L/2, 2) + Math.pow(L/2, 2));
 
         try {
             File file = new File("./resources/" + type + ".xyz");
@@ -79,8 +88,10 @@ public class Writer {
 			int x= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int y= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int z= (dim == 2) ? 0 :  (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
+			
+			Point3D auxPoint= new Point3D(x,  y, z);
 
-			myWriter.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t1\t0\t0\t0\n");
+			myWriter.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t" + (1 - auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t0\n");
 		}
 	    //Escribo las particulas de borde
 	    if(dim != 2){

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Space implements Iterator<Cell>{
-    private static final int  centerX = 50, centerY = 50, centerZ = 50;
+    private int centerXY, centerZ;
 
     public Cell[][][] getSpace() {
         return space;
@@ -29,9 +29,13 @@ public class Space implements Iterator<Cell>{
     public Space(int size, boolean treeD ) {
         this.treeD = treeD;
         this.size = size;
+        
+        centerXY= size/2;
+        centerZ= (treeD) ? size/2 : 0;
+        
         cellAmmo = 0;
         if (treeD){
-            center = new Point3D(centerX, centerY ,centerZ);
+            center = new Point3D(centerXY, centerXY ,centerZ);
             space = new Cell[size][size][size];
             for(int i=0; i<size; i++){
                 for(int j=0; j<size; j++){
@@ -41,7 +45,7 @@ public class Space implements Iterator<Cell>{
                 }
             }
         }else{
-            center = new Point3D(centerX, centerY ,0);
+            center = new Point3D(centerXY, centerXY ,0);
             space = new Cell[size][size][1];
             for(int i=0; i<size; i++){
                 for(int j=0; j<size; j++){

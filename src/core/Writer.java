@@ -33,7 +33,7 @@ public class Writer {
 	public void writeSpace(int t,int cellnum, Space space, FileWriter writer) throws IOException {
 		int size = space.getSize();
 		writer.write(space.isTreeD() ? (cellnum+8) : (cellnum+4)); //numero de particulas + particulas de borde
-		writer.write("\ntime = " + t +"\n" ); //el numero de iteración, (comentario que no se usa)
+		writer.write("\ntime=" + t +"\n" ); //el numero de iteración, (comentario que no se usa)
 		for(int i=0;i<size; i++){
 			for(int j=0; j<size; j++){
 				if(space.isTreeD()){

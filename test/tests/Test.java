@@ -73,17 +73,22 @@ class Test {
 
 	}
 
-	/*@org.junit.jupiter.api.Test
+	@org.junit.jupiter.api.Test
 	void test05CreacionDeAutomata() {
-		CellularAutomaton cell= new CellularAutomaton(,);
+		CellularAutomaton cell= new CellularAutomaton("static.xyz","abc.xyz");
+		assertTrue(true);
 		cell.solve(new Rules() {
 			@Override
 			public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
-				if(numLiveCells == 3 && !isAlive ){
+				if (numLiveCells == 3 && !isAlive ){
 					new_cell.revive();
 					return 1;
 				}
-				if(isAlive && (numLiveCells == 2 || numLiveCells ==3)){
+				if (isAlive && numLiveCells == 2){
+					new_cell.revive();
+					return 1;
+				}
+				if (isAlive && numLiveCells ==3){
 					new_cell.revive();
 					return 1;
 				}
@@ -92,7 +97,6 @@ class Test {
 			}
 		});
 	}
-*/
 
 
 

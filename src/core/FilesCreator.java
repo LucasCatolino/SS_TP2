@@ -1,12 +1,9 @@
 package core;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-
-import core.Writer;
 
 @SuppressWarnings("unused") //Warnings because Writer is not used, it only creates files
 public class FilesCreator {

@@ -75,7 +75,7 @@ public class CellularAutomaton {
         }*/
         int t=1;
         //while(check() && t < MAX_ITERATIONS){
-        while(t< MAX_ITERATIONS) {
+        while(t< MAX_ITERATIONS && space.cellAmmo != 0) {
             space = space.update(rules);
             writeOutput(space,t);
             t++;

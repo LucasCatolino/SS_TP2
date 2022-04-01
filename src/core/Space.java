@@ -2,10 +2,9 @@ package core;
 
 import javafx.geometry.Point3D;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Arrays;
 
-public class Space implements Iterator<Cell>{
+public class Space{
     private int centerXY, centerZ;
 
     public Cell[][][] getSpace() {
@@ -55,7 +54,13 @@ public class Space implements Iterator<Cell>{
         }
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(space);
+    }
+
     public void add(int x, int y, int z){
+        cellAmmo ++;
         space[x][y][z].revive();
     }
 
@@ -78,6 +83,8 @@ public class Space implements Iterator<Cell>{
         //primero matamos todos
         //itera sobre la lista reviveindo las celdas que estan en la lista
     }
+
+
 
     public int getNeighbors(int x, int y, int z) {
         int toRet = space[x][y][z].isAlive() ? -1 : 0;
@@ -102,20 +109,6 @@ public class Space implements Iterator<Cell>{
     private double getDistOrigin(int x, int y, int z){
         return center.distance( x, y, z);
     }
-
-
-    @Override
-    public boolean hasNext() {
-        //TODO:hacer
-        return false;
-    }
-
-    @Override
-    public Cell next() {
-        //TODO:hacer
-        return null;
-    }
-
 
     public boolean gameOver(){
         boolean allAreDead = true,

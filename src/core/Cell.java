@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Objects;
+
 public class Cell{
     private final int distance;
     private boolean alive;
@@ -10,7 +12,10 @@ public class Cell{
         this.distance = distance;
     }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(distance, alive);
+    }
 
     public boolean isAlive() {
         return alive;

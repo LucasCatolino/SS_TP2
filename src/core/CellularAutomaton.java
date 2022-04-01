@@ -104,7 +104,7 @@ public class CellularAutomaton {
     					for(int k=0; k<size; k++){
     						Cell auxCell= space.getSpace()[i][j][k];
     						if(auxCell.isAlive()) {
-    							fw.write(i + "\t" + j + "\t" + k + "\t1" + "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
+    							fw.write(i + "\t" + j + "\t" + k + "\t" + ((1 - auxCell.getDistance()/maxDist)) + "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
     						}
     					}
     				} else {
@@ -118,7 +118,7 @@ public class CellularAutomaton {
 
     	    //Escribo las particulas de borde
     	    if(space.isTreeD()){
-    			fw.write("0\t0\t0\t0\t0\t0\t0\n" +
+    			fw.write("0\t0\t0\t0\t0\t0\t100\n" +
     					size + "\t" + size + "\t" + size + "\t0\t0\t0\t100\n" +
     					"0\t0\t" + size + "\t0\t0\t0\t100\n" +
     					size + "\t0\t0\t0\t0\t0\t100\n" +

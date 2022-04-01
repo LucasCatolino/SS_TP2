@@ -80,7 +80,7 @@ public class Writer {
 	private void randomizePositions(int l, int dim, int startingMax, FileWriter myWriter) throws IOException {
 		int middle= (int) Math.floor(l/2);
 		int max= (dim == 2) ? startingMax : startingMax * 10;
-		int fileStartingMax= (dim == 2) ? startingMax + 4 : startingMax + 8;
+		int fileStartingMax= (dim == 2) ? max + 4 : max + 8;
 		myWriter.write(fileStartingMax + "\n");
 		myWriter.write("t=0\n");
 

@@ -20,19 +20,23 @@ public class Writer {
         maxDist= Math.sqrt(Math.pow(L/2, 2) + Math.pow(L/2, 2));
 
         try {
-            File file = new File("./resources/" + type + ".xyz");
-            FileWriter myWriter = new FileWriter("./resources/" + type + ".xyz");
+            File file = new File("./resources/" + type + ".txt");
+            FileWriter myWriter = new FileWriter("./resources/" + type + ".txt");
             try {
             	if (type.compareTo("static") == 0) {
 					this.staticFile(L, dim, myWriter);
 				} else {
-					this.randomizePositions(L, dim, max, myWriter);
+		            File file2 = new File("./resources/" + type + ".xyz");
+		            FileWriter myWriter2 = new FileWriter("./resources/" + type + ".xyz");
+					this.randomizePositions(L, dim, max, myWriter, myWriter2);
+					myWriter2.close();
+		            System.out.println("Successfully wrote to the file ./resources/" + type + ".xyz");
 				}
 			} catch (Exception e) {
 				System.err.println("IOException");
 			}
             myWriter.close();
-            System.out.println("Successfully wrote to the file ./resources/" + type + ".xyz");
+            System.out.println("Successfully wrote to the file ./resources/" + type + ".txt");
         } catch (IOException e) {
             System.out.println("IOException ocurred");
             e.printStackTrace();
@@ -77,24 +81,27 @@ public class Writer {
 		}
 	}
 
-	private void randomizePositions(int l, int dim, int startingMax, FileWriter myWriter) throws IOException {
+	private void randomizePositions(int l, int dim, int startingMax, FileWriter myWriter, FileWriter myWriter2) throws IOException {
 		int middle= (int) Math.floor(l/2);
 		int max= (dim == 2) ? startingMax : startingMax * 10;
-		int fileStartingMax= (dim == 2) ? max + 4 : max + 8;
-		myWriter.write(fileStartingMax + "\n");
+		//int fileStartingMax= (dim == 2) ? max + 4 : max + 8;
+		myWriter.write(max + "\n");
+		myWriter2.write(max + "\n");
 		myWriter.write("t=0\n");
-
+		myWriter2.write("t=0\n");
+		
 		for (int i = 0; i < max; i++) {
 			int x= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int y= (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			int z= (dim == 2) ? 0 :  (int) Math.floor(Math.random() * 2 * RANGE) + (middle - RANGE);
 			
 			Point3D auxPoint= new Point3D(x,  y, z);
-
-			myWriter.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t" + (1 - auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t0\n");
+			myWriter.write("" + x + "\t" + "" + y + "\t" + "" + z + "\n");
+			myWriter2.write("" + x + "\t" + "" + y + "\t" + "" + z + "\n");
+			//myWriter.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t" + (1 - auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t0\n");
 		}
 	    //Escribo las particulas de borde
-	    if(dim != 2){
+	    /*if(dim != 2){
 	    	myWriter.write("0\t0\t0\t0\t0\t0\t0\n" +
 					l + "\t" + l + "\t" + l + "\t0\t0\t0\t100\n" +
 					"0\t0\t" + l + "\t0\t0\t0\t100\n" +
@@ -108,7 +115,7 @@ public class Writer {
 					l + "\t" + l + "\t0\t0\t0\t0\t100\n" +
 					"0\t" + l + "\t0\t0\t0\t0\t100\n" +
 					l + "\t0\t0\t0\t0\t0\t100\n");
-		}
+		}*/
 		
 	}
 

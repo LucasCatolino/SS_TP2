@@ -3,12 +3,10 @@ package core;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class CellularAutomaton {
-    private int totalCell;
+	
     private int size = 100;
     private Space space;
     private static final int MAX_ITERATIONS = 50;
@@ -17,10 +15,8 @@ public class CellularAutomaton {
     private String dynamicFile;
     private boolean treeD;
 
-
-
     public CellularAutomaton(String staticFile, String dynamicFile){
-        //TODO:hacer
+
     	this.dynamicFile= dynamicFile;
         InputStream dynamicStream = CellularAutomaton.class.getClassLoader().getResourceAsStream(dynamicFile);
         assert dynamicStream != null;
@@ -30,8 +26,8 @@ public class CellularAutomaton {
         dynamicScanner = new Scanner(dynamicStream);
         Scanner staticScanner = new Scanner(staticStream);
 
-        size = Integer.parseInt(staticScanner.next()); //Tam de tablero
-        String dim = staticScanner.next(); //
+        size = Integer.parseInt(staticScanner.next()); //Tam del tablero
+        String dim = staticScanner.next(); //Dim del tablero
         staticScanner.close();
 
         treeD = dim.equals("3D");
@@ -40,7 +36,6 @@ public class CellularAutomaton {
         
         int initialParticles= Integer.parseInt(dynamicScanner.next()); //First line initial particles
         initialParticles= (treeD) ? initialParticles - 8 : initialParticles - 4;
-    	System.out.println("Cantidad: " + initialParticles);
 
         dynamicScanner.next(); //Skip comments line
         
@@ -53,14 +48,10 @@ public class CellularAutomaton {
         	dynamicScanner.next(); //G
         	dynamicScanner.next(); //B
         	dynamicScanner.next(); //Transparency
-        	System.out.println("x: " + x + " y: " + y + " z: " + z);
+
         	space.add(x, y, z);
         	i++;
         }
-
-        //TODO:hacer
-        //a mediada que lee el dynamic llena el spacio1
-
     }
 
     public void solve(Rules rules){
@@ -97,8 +88,7 @@ public class CellularAutomaton {
 
 
     private void writeOutput(Space liveCell, int t){
-    	try
-    	{
+    	try {
     	    String filename= "./resources/" + dynamicFile;
     	    FileWriter fw = new FileWriter(filename,true);
     	    fw.write(treeD ? (space.cellAmmo + 8) + "\n" : (space.cellAmmo + 4) + "\n");
@@ -112,8 +102,7 @@ public class CellularAutomaton {
     							fw.write(i + "\t" + j + "\t" + k + "\t1" + "\t0" + "\t0" + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
     						}
     					}
-    				}
-    				else{
+    				} else {
     					if(space.getSpace()[i][j][0].isAlive()){
     						fw.write(i + "\t" + j + "\t0" + "\t1" + "\t0" + "\t0" + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
     					}
@@ -131,24 +120,18 @@ public class CellularAutomaton {
     					size + "\t" + size + "\t0\t0\t0\t0\t100\n" +
     					size + "\t0 " + size + "\t0\t0\t0\t100\n" +
     					"0\t" + size + "\t" + size + "\t0\t0\t0\t100\n");
-    		}
-    		else{
+    		}else {
     			fw.write("0\t0\t0\t0\t0\t0\t100\n" +
     					size + "\t" + size + "\t0\t0\t0\t0\t100\n" +
     					"0\t" + size + "\t0\t0\t0\t0\t100\n" +
     					size + "\t0\t0\t0\t0\t0\t100\n");
     		}
     	    
-    	    //fw.write("add a line\n");
     	    fw.close();
-    	    System.out.println(t);
     	}
-    	catch(IOException ioe)
-    	{
+    	catch(IOException ioe) {
     	    System.err.println("IOException: " + ioe.getMessage());
     	}
-        //TODO:hacer
-        //escrive todas las al final del archivo
     }
 
 

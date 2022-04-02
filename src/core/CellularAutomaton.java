@@ -120,9 +120,9 @@ public class CellularAutomaton {
 
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         
-	    String filename= ("./resources/animation_" + date + dynamicFile);
+	    String filename= ("./resources/animation_" + date + dynamicFile);//
 	    String filenameLinechart= ("./resources/linechart_").concat("_" + date + ".txt");
-	    FileWriter fw = new FileWriter(filename,true);
+	    FileWriter fw = new FileWriter(filename,true);//
 	    FileWriter fwLC = new FileWriter(filenameLinechart,true);
 	    
 	    boolean stopX= false;
@@ -135,8 +135,8 @@ public class CellularAutomaton {
         	String time= dynamicScanner.next(); //time line
         	fwLC.write("" + time + "\t" + initialParticles + "\n");
         	
-        	fw.write(treeD ? (initialParticles + 8) + "\n" : (initialParticles + 4) + "\n");
-    	    fw.write(time + "\n");
+        	fw.write(treeD ? (initialParticles + 8) + "\n" : (initialParticles + 4) + "\n");//
+    	    fw.write(time + "\n");//
     	    
     	    for (int i = 0; i < initialParticles; i++) {
     	    	int x= Integer.parseInt(dynamicScanner.next());
@@ -145,14 +145,15 @@ public class CellularAutomaton {
             	
     			Point3D auxPoint= new Point3D(x,  y, z);
             	
-            	fw.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t" + (1 - auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t0\n");
+            	fw.write("" + x + "\t" + "" + y + "\t" + "" + z + "\t" + (1 - auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t" + (auxPoint.distance(center)/maxDist) + "\t0\n");//
             	
             	stopX= (stopX) ? true : margin(x);
             	stopY= (stopY) ? true : margin(y);
             	stopZ= (stopZ) ? true : ((treeD) ? margin(z) : false); //In 2D does not make sense
     	    }
     	    
-    	    //Escribo las particulas de borde
+    	    //Escribo las particulas de borde//
+    	    
     	    if(space.isTreeD()){
     			fw.write("0\t0\t0\t0\t0\t0\t100\n" +
     					size + "\t" + size + "\t" + size + "\t0\t0\t0\t100\n" +
@@ -184,6 +185,7 @@ public class CellularAutomaton {
 
 	static public void main(String[] args) {
 		CellularAutomaton cell= new CellularAutomaton("static","dynamic");
+		System.out.println("Creating simulation");
 		cell.solve(new Rules() {
 			@Override
 			public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
@@ -200,15 +202,14 @@ public class CellularAutomaton {
 					return 1;
 				}
 				return 0;
-
 			}
 		});
-
+		System.out.println("Simulation done");
 		boolean keepGoing= false;
 		Scanner scan = new Scanner(System.in);
 
 		while (!keepGoing) {    		
-    		System.out.println("Press enter to create animated file");
+    		System.out.println("Press enter to create visualization files");
     		scan.nextLine();
     		keepGoing= true;
     	}
@@ -219,3 +220,90 @@ public class CellularAutomaton {
     }
 
 }
+
+/**/
+//
+	//Regla 1: Juego de la vida (2D y 3D)
+/*
+	@Override
+	public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
+		if(numLiveCells == 3 && !isAlive ){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells == 2){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells ==3){
+			new_cell.revive();
+			return 1;
+		}
+		return 0;
+	}
+*/
+	//2D
+	//Regla 2: muerta y mas de 4 vive, viva y menos de 5 vive
+/*
+	@Override
+	public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
+		if(!isAlive && numLiveCells > 4){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells < 5){
+			new_cell.revive();
+			return 1;
+		}
+		return 0;
+	}
+
+*/
+	//Regla 3: muerta y más de 1 vive, viva y más de 1 vive
+/*
+	@Override
+	public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
+		if(!isAlive && numLiveCells > 1){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells > 1){
+			new_cell.revive();
+			return 1;
+		}
+		return 0;
+	}
+*/
+	//3D
+	//Regla 2: muerta y mas de 6 vive, viva y menos de 16 vive 
+/*
+	@Override
+	public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
+		if(!isAlive && numLiveCells > 6){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells < 16){
+			new_cell.revive();
+			return 1;
+		}
+		return 0;
+	}
+*/
+	//Regla 3: muerta y mas de 6 vive, viva y mas de 12 vive
+/*
+	@Override
+	public int apply(Cell new_cell,Boolean isAlive, int numLiveCells) {
+		if(!isAlive && numLiveCells > 6){
+			new_cell.revive();
+			return 1;
+		}
+		if(isAlive && numLiveCells > 12){
+			new_cell.revive();
+			return 1;
+		}
+		return 0;
+	}
+*/
+//
+/**/

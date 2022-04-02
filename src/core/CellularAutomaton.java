@@ -1,16 +1,12 @@
 package core;
 
-import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Scanner;
 
-import com.sun.tools.javac.jvm.StringConcat;
 
 import javafx.geometry.Point3D;
 
@@ -23,13 +19,11 @@ public class CellularAutomaton {
     
     private String dynamicFile;
     private boolean treeD;
-    //private double maxDist=50;
-
 
     public CellularAutomaton(String staticFile, String dynamicFileInput){
 
     	this.dynamicFile= dynamicFileInput.concat(".xyz");
-    	System.out.println(dynamicFile);
+
         InputStream dynamicStream = CellularAutomaton.class.getClassLoader().getResourceAsStream(dynamicFileInput + ".txt");
         assert dynamicStream != null;
         InputStream staticStream = CellularAutomaton.class.getClassLoader().getResourceAsStream(staticFile + ".txt");
@@ -39,7 +33,6 @@ public class CellularAutomaton {
         Scanner staticScanner = new Scanner(staticStream);
 
         size = Integer.parseInt(staticScanner.next()); //Tam del tablero
-        //maxDist= Math.sqrt(Math.pow(size/2, 2) + Math.pow(size/2, 2));
         
         String dim = staticScanner.next(); //Dim del tablero
         staticScanner.close();
@@ -113,13 +106,7 @@ public class CellularAutomaton {
     }
     
     private void writeAnimationFile() throws IOException{
-    	//abro el dynamic
-    	//leo los tokens y voy escribiendo
-    		//cantidad
-    		//tiempo
-    		//x y z r g b t
-    	//cierro el dynamic
-    	
+
     	int centerXY= size/2;
         int centerZ= (treeD) ? (size/2) : 0;
         Point3D center = new Point3D(centerXY, centerXY ,centerZ);
@@ -133,18 +120,22 @@ public class CellularAutomaton {
 
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         
-	    String filename= ("./resources/animation_" + dynamicFile).concat("_" + date);
+	    String filename= ("./resources/animation_" + date + dynamicFile);
+	    String filenameLinechart= ("./resources/linechart_").concat("_" + date + ".txt");
 	    FileWriter fw = new FileWriter(filename,true);
+	    FileWriter fwLC = new FileWriter(filenameLinechart,true);
 	    
 	    boolean stopX= false;
 	    boolean stopY= false;
 	    boolean stopZ= false;
         
+    	fwLC.write("t" + "\tParticles\n");
         while (dynamicScanner.hasNext() && !stopX && !stopY && !stopZ) {
         	int initialParticles= Integer.parseInt(dynamicScanner.next()); //First line initial particles
-    	    fw.write(treeD ? (initialParticles + 8) + "\n" : (initialParticles + 4) + "\n");
-    	    
-    	    String time= dynamicScanner.next(); //time line
+        	String time= dynamicScanner.next(); //time line
+        	fwLC.write("" + time + "\t" + initialParticles + "\n");
+        	
+        	fw.write(treeD ? (initialParticles + 8) + "\n" : (initialParticles + 4) + "\n");
     	    fw.write(time + "\n");
     	    
     	    for (int i = 0; i < initialParticles; i++) {
@@ -180,73 +171,9 @@ public class CellularAutomaton {
 		}
         
         fw.close();
+        fwLC.close();
         dynamicStream.close();
     }
-/*
-        //dynamicScanner.next(); //Skip comments line
-        
-        int i= 0;
-        while (dynamicScanner.hasNext() && i < initialParticles) {
-        	int x= Integer.parseInt(dynamicScanner.next());
-        	int y= Integer.parseInt(dynamicScanner.next());
-        	int z= Integer.parseInt(dynamicScanner.next());
-
-        	space.add(x, y, z);
-        	i++;
-        }
-
-
-
-    	
-    	
-    	try {
-    	    String filename= "./resources/" + dynamicFile;
-    	    FileWriter fw = new FileWriter(filename,true);
-    	    fw.write(treeD ? (space.cellAmmo + 8) + "\n" : (space.cellAmmo + 4) + "\n");
-    	    //fw.write("t=" + Integer.toString(t) + "\n");
-    	    //
-    	    for(int i=0;i<size; i++){
-    			for(int j=0; j<size; j++){
-    				if(space.isTreeD()){
-    					for(int k=0; k<size; k++){
-    						Cell auxCell= space.getSpace()[i][j][k];
-    						if(auxCell.isAlive()) {
-    							fw.write(i + "\t" + j + "\t" + k + "\t" + ((1 - auxCell.getDistance()/maxDist)) + "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
-    						}
-    					}
-    				} else {
-						Cell auxCell= space.getSpace()[i][j][0];
-    					if(space.getSpace()[i][j][0].isAlive()){
-    						fw.write(i + "\t" + j + "\t0" + "\t" + (1 - auxCell.getDistance()/maxDist)+ "\t" + auxCell.getDistance()/maxDist + "\t" + auxCell.getDistance()/maxDist + "\t0" + "\n"); //TODO: RGB y t harcodeados, cambiar
-    					}
-    				}
-    			}
-    		}
-
-    	    //Escribo las particulas de borde
-    	    if(space.isTreeD()){
-    			fw.write("0\t0\t0\t0\t0\t0\t100\n" +
-    					size + "\t" + size + "\t" + size + "\t0\t0\t0\t100\n" +
-    					"0\t0\t" + size + "\t0\t0\t0\t100\n" +
-    					size + "\t0\t0\t0\t0\t0\t100\n" +
-    					"0\t" + size + "\t0\t0\t0\t0\t100\n" +
-    					size + "\t" + size + "\t0\t0\t0\t0\t100\n" +
-    					size + "\t0 " + size + "\t0\t0\t0\t100\n" +
-    					"0\t" + size + "\t" + size + "\t0\t0\t0\t100\n");
-    		}else {
-    			fw.write("0\t0\t0\t0\t0\t0\t100\n" +
-    					size + "\t" + size + "\t0\t0\t0\t0\t100\n" +
-    					"0\t" + size + "\t0\t0\t0\t0\t100\n" +
-    					size + "\t0\t0\t0\t0\t0\t100\n");
-    		}
-    	    
-    	    fw.close();
-    	}
-    	catch(IOException ioe) {
-    	    System.err.println("IOException: " + ioe.getMessage());
-    	}
-    }
-*/
 
 	private boolean margin(int pos) {
 		if (pos == 1 || pos == (size)) {
@@ -281,12 +208,14 @@ public class CellularAutomaton {
 		Scanner scan = new Scanner(System.in);
 
 		while (!keepGoing) {    		
-    		System.out.println("Insert any key to create animated file");
+    		System.out.println("Press enter to create animated file");
     		scan.nextLine();
     		keepGoing= true;
     	}
 		
 		cell.getAnimationFile();
+		
 		System.out.println("End");
     }
+
 }
